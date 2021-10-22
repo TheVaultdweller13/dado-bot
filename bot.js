@@ -16,13 +16,9 @@ client.on('messageCreate', async message => {
     if (message.content.startsWith('!')) {
         const commandRegex = /!(\d+)d(\d+)(\s?(\+|-)\s?(\d+))?/;
         try {
-            const dice = commandRegex.exec(message.content)[1];
-            const faces = commandRegex.exec(message.content)[2];
-            // Contenido adicional (por ejemplo '+ 30' a la tirada)
-            const operator = commandRegex.exec(message.content)[4];
-            const number = commandRegex.exec(message.content)[5];
+            const [ , dice, faces, , operator, number ] = commandRegex.exec(message.content);
+            // operator y number son el contenido adicional p.e. +30 a la tirada
             const extra = operator && number ? eval(operator + number) : null;
-
             const rollMsg = roll(dice, faces, extra);
             await message.channel.send({ embeds: [rollEmbed(rollMsg)] });
         }
@@ -34,7 +30,6 @@ client.on('messageCreate', async message => {
 });
 
 client.login(token);
-
 
 const roll = (dice, faces, extra) => {
     const rolls = Array.apply(1, Array(parseInt(dice)))
