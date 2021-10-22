@@ -1,0 +1,17 @@
+{
+  "name": "dado-bot",
+  "version": "1.0.0",
+  "description": "Dado virtual",
+  "main": "bot.js",
+  "dependencies": {
+    "discord.js": "^13.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TheVaultdweller13",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.0.1"
+  }
+}
