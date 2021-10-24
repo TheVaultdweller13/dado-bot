@@ -27,7 +27,7 @@ const makeAnswer = (message) => {
     catch (error) {
         console.warn(error);
         return {
-            embeds: [rollEmbed('Formato incorrecto, prueba algo tipo: !1d20 o !3d8 + 3')],
+            content: 'Comando no encontrado. Usa `!help` para ver los comandos disponibles',
         };
     }
 };
