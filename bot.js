@@ -72,5 +72,5 @@ const roll = (dice, faces, extra) => {
 
 const rollEmbed = (message, author) => new MessageEmbed()
     .setColor('#A01616')
-    .setTitle(`Lazanmiento de ${author}`)
+    .setTitle(`Lanzamiento de @${author}`)
     .setDescription(message);
