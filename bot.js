@@ -7,7 +7,7 @@ const onRoll = (message) => {
     // operator y number son el contenido adicional p.e. +30 a la tirada
     const extra = operator && number ? eval(operator + number) : null;
     const rollMsg = roll(parseInt(dice), faces, extra);
-    return { embeds: [rollEmbed(rollMsg)] };
+    return { embeds: [rollEmbed(rollMsg, message.author.username)] };
 };
 
 const onHelp = () => {
@@ -70,7 +70,7 @@ const roll = (dice, faces, extra) => {
             : `Tiradas: ${rolls.join(', ')}\nTotal: ${rollSum}`;
 };
 
-const rollEmbed = (message) => new MessageEmbed()
+const rollEmbed = (message, author) => new MessageEmbed()
     .setColor('#A01616')
-    .setTitle('Resultado')
+    .setTitle(`Lazanmiento de ${author}`)
     .setDescription(message);
