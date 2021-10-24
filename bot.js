@@ -18,6 +18,28 @@ const onInfo = () => {
     return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
 };
 
+const makeAnswer = (message) => {
+    try {
+        const command = commands.find((com) => com.regex.test(message.content));
+        return command.callback(message);
+    }
+    catch (error) {
+        console.warn(error);
+        return {
+            embeds: [rollEmbed('Formato incorrecto, prueba algo tipo: !1d20 o !3d8 + 3')],
+        };
+    }
+};
+
+const reply = async (message, answer) => {
+    try {
+        await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
+    }
+    catch (error) {
+        console.error(error);
+    }
+};
+
 const commands = [
     { name: 'roll', regex: CommandRegex.ROLL, callback: onRoll },
     { name: 'help', regex: CommandRegex.HELP, callback: onHelp },
@@ -39,19 +61,8 @@ client.once('ready', () => {
 
 client.on('messageCreate', async (message) => {
     if (message.content.startsWith('!')) {
-        let answer;
-        try {
-            const command = commands.find((com) => com.regex.test(message.content));
-            answer = command.callback(message);
-        }
-        catch (error) {
-            console.error(error);
-            answer = {
-                embeds: [rollEmbed('Formato incorrecto, prueba algo tipo: !1d20 o !3d8 + 3')],
-            };
-        }
-
-        await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
+        const answer = makeAnswer(message);
+        reply(message, answer);
     }
 });
 
