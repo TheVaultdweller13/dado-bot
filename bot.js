@@ -11,7 +11,7 @@ const onRoll = (message) => {
 };
 
 const onHelp = () => {
-    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
+    return { embeds: [helpEmbed()] };
 };
 
 const onInfo = () => {
@@ -74,3 +74,17 @@ const rollEmbed = (message, author) => new MessageEmbed()
     .setColor('#A01616')
     .setTitle(`Lanzamiento de ${author}`)
     .setDescription(message);
+
+const helpEmbed = () => new MessageEmbed
+    .setTitle('Ayuda')
+    .setDescription(`
+        \`\`\`
+        Para usar el dado virtual escribe el prefijo '!' y a continuación tu tirada de dados. 
+        Permite sumar y restar a la tirada final con los operdores + y -
+
+        Ejemplos:
+         Tirar un dado de veinte: !1d20
+         Tirar tres dados de seis: !3d6
+         Tirar dos dados de diez y sumarle cinco al resultado final: !3d6 + 5
+        \`\`\` 
+        `);
