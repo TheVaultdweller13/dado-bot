@@ -2,6 +2,28 @@ const { Client, Intents, MessageEmbed } = require('discord.js');
 const CommandRegex = require('./commandRegex');
 const token = process.env.DISCORD_TOKEN;
 
+const onRoll = (message) => {
+    const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
+    // operator y number son el contenido adicional p.e. +30 a la tirada
+    const extra = operator && number ? eval(operator + number) : null;
+    const rollMsg = roll(parseInt(dice), faces, extra);
+    return { embeds: [rollEmbed(rollMsg)] };
+};
+
+const onHelp = () => {
+    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
+};
+
+const onInfo = () => {
+    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
+};
+
+const commands = [
+    { name: 'roll', regex: CommandRegex.ROLL, callback: onRoll },
+    { name: 'help', regex: CommandRegex.HELP, callback: onHelp },
+    { name: 'info', regex: CommandRegex.INFO, callback: onInfo },
+];
+
 const client = new Client({
     intents: [
         Intents.FLAGS.GUILDS,
@@ -12,13 +34,8 @@ const client = new Client({
 
 client.once('ready', () => {
     console.log('Ready!');
+    client.channels.cache.get('901110509758189641').send('Aquí estoy, payasos. 🤡');
 });
-
-const commands = [
-    { name: 'roll', regex: CommandRegex.ROLL, callback: onRoll },
-    { name: 'help', regex: CommandRegex.HELP, callback: onHelp },
-    { name: 'info', regex: CommandRegex.INFO, callback: onInfo },
-];
 
 client.on('messageCreate', async (message) => {
     if (message.content.startsWith('!')) {
@@ -57,19 +74,3 @@ const rollEmbed = (message) => new MessageEmbed()
     .setColor('#A01616')
     .setTitle('Resultado')
     .setDescription(message);
-
-const onRoll = (message) => {
-    const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
-    // operator y number son el contenido adicional p.e. +30 a la tirada
-    const extra = operator && number ? eval(operator + number) : null;
-    const rollMsg = roll(parseInt(dice), faces, extra);
-    return { embeds: [rollEmbed(rollMsg)] };
-};
-
-const onHelp = () => {
-    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
-};
-
-const onInfo = () => {
-    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
-};
