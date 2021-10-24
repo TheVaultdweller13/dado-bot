@@ -1,9 +1,6 @@
-name: Deploy to Heroku (development)
+name: Manual deploy to Heroku (development)
 
-on:
-  push:
-    branches:
-      - develop
+on: workflow_dispatch
 
 jobs:
   build:
