@@ -39,17 +39,19 @@ client.once('ready', () => {
 
 client.on('messageCreate', async (message) => {
     if (message.content.startsWith('!')) {
+        let answer;
         try {
             const command = commands.find((com) => com.regex.test(message.content));
-            const answer = command.callback(message);
-            await message.channel.send(answer);
+            answer = command.callback(message);
         }
         catch (error) {
             console.error(error);
-            await message.channel.send({
+            answer = {
                 embeds: [rollEmbed('Formato incorrecto, prueba algo tipo: !1d20 o !3d8 + 3')],
-            });
+            };
         }
+
+        await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
     }
 });
 
@@ -57,7 +59,7 @@ client.login(token);
 
 const roll = (dice, faces, extra) => {
     const rolls = Array.apply(1, Array(dice))
-        .map(() => Math.floor(Math.random() * (faces) + 1));
+        .map(() => Math.floor(Math.random() * faces + 1));
 
     const rollSum = rolls.reduce((a, b) => a + b, 0);
 
