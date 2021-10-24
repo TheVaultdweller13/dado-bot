@@ -75,7 +75,7 @@ const rollEmbed = (message, author) => new MessageEmbed()
     .setTitle(`Lanzamiento de ${author}`)
     .setDescription(message);
 
-const helpEmbed = () => new MessageEmbed
+const helpEmbed = () => new MessageEmbed()
     .setTitle('Ayuda')
     .setDescription(`
         \`\`\`
