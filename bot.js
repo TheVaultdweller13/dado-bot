@@ -12,7 +12,7 @@ const onRoll = (message) => {
 };
 
 const onHelp = () => {
-    return { embeds: [helpEmbed()] };
+    return text.HELP;
 };
 
 const onInfo = () => {
@@ -88,7 +88,3 @@ const rollEmbed = (message, author) => new MessageEmbed()
     .setColor('#A01616')
     .setTitle(`Lanzamiento de ${author}`)
     .setDescription(message);
-
-const helpEmbed = () => new MessageEmbed()
-    .setTitle('Ayuda')
-    .setDescription(text.HELP);
