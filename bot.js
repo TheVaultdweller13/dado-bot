@@ -1,5 +1,6 @@
 const { Client, Intents, MessageEmbed } = require('discord.js');
 const CommandRegex = require('./commandRegex');
+const text = require('./text');
 const token = process.env.DISCORD_TOKEN;
 
 const onRoll = (message) => {
@@ -77,14 +78,4 @@ const rollEmbed = (message, author) => new MessageEmbed()
 
 const helpEmbed = () => new MessageEmbed()
     .setTitle('Ayuda')
-    .setDescription(`
-        \`\`\`
-        Para usar el dado virtual escribe el prefijo '!' y a continuación tu tirada de dados. 
-        Permite sumar y restar a la tirada final con los operadores + y -
-
-        Ejemplos:
-            - Tirar un dado de veinte: !1d20
-            - Tirar tres dados de seis: !3d6
-            - Tirar dos dados de diez y sumarle cinco al resultado final: !2d10 + 5
-        \`\`\` 
-        `);
+    .setDescription(text.HELP);
