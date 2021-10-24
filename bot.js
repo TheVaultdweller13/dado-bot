@@ -12,7 +12,7 @@ const onRoll = (message) => {
 };
 
 const onHelp = () => {
-    return text.HELP;
+    return { content: text.HELP };
 };
 
 const onInfo = () => {
