@@ -1,9 +1,11 @@
 const { Client, Intents, MessageEmbed } = require('discord.js');
+const CommandRegex = require('./commandRegex');
 const token = process.env.DISCORD_TOKEN;
 
 const client = new Client({
     intents: [
-        Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     ],
 });
@@ -12,19 +14,24 @@ client.once('ready', () => {
     console.log('Ready!');
 });
 
-client.on('messageCreate', async message => {
+const commands = [
+    { name: 'roll', regex: CommandRegex.ROLL, callback: onRoll },
+    { name: 'help', regex: CommandRegex.HELP, callback: onHelp },
+    { name: 'info', regex: CommandRegex.INFO, callback: onInfo },
+];
+
+client.on('messageCreate', async (message) => {
     if (message.content.startsWith('!')) {
-        const commandRegex = /!(\d+)d(\d+)(\s?(\+|-)\s?(\d+))?/;
         try {
-            const [ , dice, faces, , operator, number ] = commandRegex.exec(message.content);
-            // operator y number son el contenido adicional p.e. +30 a la tirada
-            const extra = operator && number ? eval(operator + number) : null;
-            const rollMsg = roll(parseInt(dice), faces, extra);
-            await message.channel.send({ embeds: [rollEmbed(rollMsg)] });
+            const command = commands.find((com) => com.regex.test(message.content));
+            const answer = command.callback(message);
+            await message.channel.send(answer);
         }
         catch (error) {
             console.error(error);
-            await message.channel.send({ embeds: [rollEmbed('Formato incorrecto, prueba algo tipo: !1d20 o !3d8 + 3')] });
+            await message.channel.send({
+                embeds: [rollEmbed('Formato incorrecto, prueba algo tipo: !1d20 o !3d8 + 3')],
+            });
         }
     }
 });
@@ -50,3 +57,19 @@ const rollEmbed = (message) => new MessageEmbed()
     .setColor('#A01616')
     .setTitle('Resultado')
     .setDescription(message);
+
+const onRoll = (message) => {
+    const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
+    // operator y number son el contenido adicional p.e. +30 a la tirada
+    const extra = operator && number ? eval(operator + number) : null;
+    const rollMsg = roll(parseInt(dice), faces, extra);
+    return { embeds: [rollEmbed(rollMsg)] };
+};
+
+const onHelp = () => {
+    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
+};
+
+const onInfo = () => {
+    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
+};
