@@ -1,6 +1,6 @@
 {
   "name": "dado-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Dado virtual",
   "main": "bot.js",
   "dependencies": {
