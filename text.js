@@ -22,9 +22,9 @@ https://github.com/TheVaultdweller13/dado-bot/issues
 `;
 
 const WELCOME = `
-¡Gracias por invitar a dado-bot a tu servidor!
+¡Gracias por invitar a dado-bot a tu servidor! 💖
 
-Su función es permitir realizar tiradas de dados, prueba por ejemplo con !3d6 para ver el resultado de lanzar 3 dados de 6 caras.
+Su función es permitir realizar tiradas de dados 🎲, prueba por ejemplo con !3d6 para ver el resultado de lanzar 3 dados de 6 caras.
 Para aprender más sobre cómo utilizarlo, escribe !help.
 `;
 
