@@ -16,7 +16,7 @@ const onHelp = () => {
 };
 
 const onInfo = () => {
-    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
+    return { content: text.INFO };
 };
 
 const makeAnswer = (message) => {
@@ -65,6 +65,16 @@ client.on('messageCreate', async (message) => {
         const answer = makeAnswer(message);
         reply(message, answer);
     }
+});
+
+client.on('guildCreate', async (guild) => {
+    await guild.systemChannel.send({
+        embeds: [
+            new MessageEmbed()
+                .setTitle(text.WELCOME_TITLE)
+                .setDescription(text.WELCOME),
+        ],
+    });
 });
 
 client.login(token);
