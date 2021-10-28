@@ -67,6 +67,16 @@ client.on('messageCreate', async (message) => {
     }
 });
 
+client.on('guildCreate', async (guild) => {
+    await guild.systemChannel.send({
+        embeds: [
+            new MessageEmbed()
+                .setTitle(text.WELCOME_TITLE)
+                .setDescription(text.WELCOME),
+        ],
+    });
+});
+
 client.login(token);
 
 const roll = (dice, faces, extra) => {
