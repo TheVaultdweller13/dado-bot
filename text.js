@@ -21,6 +21,8 @@ Si quieres sugerir una nueva funcionalidad o encuentras un error, por favor, áb
 https://github.com/TheVaultdweller13/dado-bot/issues
 `;
 
+const WELCOME_TITLE = '¡Aquí llega dado-bot!';
+
 const WELCOME = `
 ¡Gracias por invitar a dado-bot a tu servidor! 💖
 
@@ -31,5 +33,6 @@ Para aprender más sobre cómo utilizarlo, escribe !help.
 module.exports = {
     HELP,
     INFO,
+    WELCOME_TITLE,
     WELCOME,
 };
