@@ -17,7 +17,7 @@ Comandos:
 const INFO = `
 Este es un bot de lanzamiento de dados para Discord creado por TheVaultdweller13#6426 y Nirei#7437.
 
-Si quieres sugerirnos una nueva funcionalidad o encuentras un error, por favor, ábrenos un bug en GitHub o contacta con nosotros vía Discord.
+Si quieres sugerir una nueva funcionalidad o encuentras un error, por favor, ábrenos un bug en GitHub o contacta con nosotros vía Discord.
 https://github.com/TheVaultdweller13/dado-bot/issues
 `;
 
