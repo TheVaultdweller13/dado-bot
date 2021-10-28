@@ -57,7 +57,6 @@ const client = new Client({
 
 client.once('ready', () => {
     console.log('Ready!');
-    client.channels.cache.get('901110509758189641').send('Aquí estoy, payasos. 🤡');
 });
 
 client.on('messageCreate', async (message) => {
