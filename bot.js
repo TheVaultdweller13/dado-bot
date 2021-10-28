@@ -16,7 +16,7 @@ const onHelp = () => {
 };
 
 const onInfo = () => {
-    return { embeds: [new MessageEmbed().setDescription('Not implemented')] };
+    return { content: text.INFO };
 };
 
 const makeAnswer = (message) => {
