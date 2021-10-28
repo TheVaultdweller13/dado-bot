@@ -67,6 +67,10 @@ client.on('messageCreate', async (message) => {
     }
 });
 
+client.on('guildCreate', async (guild) => {
+    await guild.systemChannel.send({ content: text.WELCOME });
+});
+
 client.login(token);
 
 const roll = (dice, faces, extra) => {
