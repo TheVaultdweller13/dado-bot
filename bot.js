@@ -2,6 +2,7 @@ const { Client, Intents, MessageEmbed } = require('discord.js');
 const CommandRegex = require('./commandRegex');
 const text = require('./text');
 const token = process.env.DISCORD_TOKEN;
+const channelId = process.env.CHANNEL_ID;
 
 const onRoll = (message) => {
     const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
@@ -53,10 +54,10 @@ const client = new Client({
 client.once('ready', () => {
     try {
         console.log('Ready!');
-        client.channels.cache.get('901110509758189641').send('¡dado-bot se ha conectado!');
+        channelId ? client.channels.cache.get(channelId).send('¡dado-bot se ha conectado!') : undefined;
     }
     catch (error) {
-        console.error('Error sending readiness message: ' + error);
+        console.warn(`Error sending readiness message to channel (${channelId})` + error);
     }
 });
 
