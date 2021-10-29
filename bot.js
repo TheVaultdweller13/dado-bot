@@ -62,12 +62,10 @@ client.once('ready', () => {
 
 client.on('messageCreate', async (message) => {
     if (message.content.startsWith('!')) {
-        message.channel.startTyping();
+        message.channel.sendTyping();
 
         const answer = makeAnswer(message);
         reply(message, answer);
-
-        message.channel.stopTyping();
     }
 });
 
