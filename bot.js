@@ -33,12 +33,7 @@ const makeAnswer = (message) => {
 };
 
 const reply = async (message, answer) => {
-    try {
-        await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
-    }
-    catch (error) {
-        console.error(error);
-    }
+    await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
 };
 
 const commands = [
@@ -56,29 +51,42 @@ const client = new Client({
 });
 
 client.once('ready', () => {
-    console.log('Ready!');
-    client.channels.cache.get('901110509758189641').send('¡dado-bot se ha conectado!');
+    try {
+        console.log('Ready!');
+        client.channels.cache.get('901110509758189641').send('¡dado-bot se ha conectado!');
+    }
+    catch (error) {
+        console.error('Error sending readiness message: ' + error);
+    }
 });
 
 client.on('messageCreate', async (message) => {
-    if (message.content.startsWith('!')) {
-        message.channel.startTyping();
+    try {
+        if (message.content.startsWith('!')) {
+            message.channel.sendTyping();
 
-        const answer = makeAnswer(message);
-        reply(message, answer);
-
-        message.channel.stopTyping();
+            const answer = makeAnswer(message);
+            reply(message, answer);
+        }
+    }
+    catch (error) {
+        console.error('Error processing incoming message: ' + error);
     }
 });
 
 client.on('guildCreate', async (guild) => {
-    await guild.systemChannel.send({
-        embeds: [
-            new MessageEmbed()
-                .setTitle(text.WELCOME_TITLE)
-                .setDescription(text.WELCOME),
-        ],
-    });
+    try {
+        await guild.systemChannel.send({
+            embeds: [
+                new MessageEmbed()
+                    .setTitle(text.WELCOME_TITLE)
+                    .setDescription(text.WELCOME),
+            ],
+        });
+    }
+    catch (error) {
+        console.error('Error entering new guild: ' + error);
+    }
 });
 
 client.login(token);
