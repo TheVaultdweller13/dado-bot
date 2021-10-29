@@ -7,15 +7,29 @@ Virtual die for Discord
 - npm
 
 ## Installation
-- Install dependencies with `npm install`
-- Create a Discord bot by following [the official guide](https://discordjs.guide/preparations/setting-up-a-bot-application.html)
-- Create a `config.json` with your bot's `token` and replace the `token` parameter in the `bot.js` module. Example:
-```json
-{
-   "token" : "YOUR_BOT_TOKEN_HERE"
-}
+- Install dependencies:
 ```
-- Run the application with `npm start`
+> npm install
+```
+- Create a Discord bot by following [the official guide](https://discordjs.guide/preparations/setting-up-a-bot-application.html)
+- Export your bot's token:
+  
+```bash
+Linux & MAC
+> export DISCORD_TOKEN="YOUR_BOT_TOKEN_HERE"
+```
+```bash
+Windows (CMD)
+> set DISCORD_TOKEN="YOUR_BOT_TOKEN_HERE"
+```
+```bash
+Windows (PowerShell)
+> $env:DISCORD_TOKEN="YOUR_BOT_TOKEN_HERE"
+```
+- Run the application:
+```
+> npm start
+```
 - Invite the bot to your server. [See the official guide](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links)
 
 ## Commands
