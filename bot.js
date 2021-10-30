@@ -23,7 +23,7 @@ const makeAnswer = (message) => {
     catch (error) {
         console.warn(error);
         return error instanceof RangeError
-            ? getContent('Introduce un conjunto más pequeño')
+            ? getContent('¡No puedo calcular una tirada tan grande! 😳')
             : getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
     }
 };
