@@ -22,9 +22,12 @@ const makeAnswer = (message) => {
     }
     catch (error) {
         console.warn(error);
-        return error instanceof RangeError
-            ? getContent('¡No puedo calcular una tirada tan grande! 😳')
-            : getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
+        switch (error.constructor) {
+        case RangeError:
+            return getContent('¡No puedo calcular una tirada tan grande! 😳');
+        default:
+            return getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
+        }
     }
 };
 
