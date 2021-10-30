@@ -12,13 +12,8 @@ const onRoll = (message) => {
     return { embeds: [rollEmbed(rollMsg, message.author.username)] };
 };
 
-const onHelp = () => {
-    return { content: text.HELP };
-};
-
-const onInfo = () => {
-    return { content: text.INFO };
-};
+const onHelp = () => getContent(text.HELP);
+const onInfo = () => getContent(text.INFO);
 
 const makeAnswer = (message) => {
     try {
