@@ -98,7 +98,8 @@ client.on('guildCreate', async (guild) => {
 client.login(token);
 
 const roll = (dice, faces, extra) => {
-    const rolls = Array.apply(1, Array(dice))
+    const rolls = Array(dice)
+        .fill(undefined)
         .map(() => Math.floor(Math.random() * faces + 1));
 
     const rollSum = rolls.reduce((a, b) => a + b, 0);
