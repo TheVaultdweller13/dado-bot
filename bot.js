@@ -1,4 +1,4 @@
-const { Client, Intents, MessageEmbed } = require('discord.js');
+const { Client, Intents, MessageEmbed, DiscordAPIError } = require('discord.js');
 const CommandRegex = require('./commandRegex');
 const text = require('./text');
 const token = process.env.DISCORD_TOKEN;
@@ -24,6 +24,7 @@ const makeAnswer = (message) => {
         console.warn(error);
         switch (error.constructor) {
         case RangeError:
+        case DiscordAPIError:
             return getContent('¡No puedo calcular una tirada tan grande! 😳');
         default:
             return getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
@@ -55,10 +56,10 @@ const client = new Client({
     ],
 });
 
-client.once('ready', () => {
+client.once('ready', async () => {
     try {
         console.log('Ready!');
-        channelId && client.channels.cache.get(channelId).send('¡dado-bot se ha conectado!');
+        channelId && await client.channels.cache.get(channelId).send('¡dado-bot se ha conectado!');
     }
     catch (error) {
         console.warn(`Error sending readiness message to channel (${channelId})` + error);
@@ -71,7 +72,7 @@ client.on('messageCreate', async (message) => {
             message.channel.sendTyping();
 
             const answer = makeAnswer(message);
-            reply(message, answer);
+            await reply(message, answer);
         }
     }
     catch (error) {
