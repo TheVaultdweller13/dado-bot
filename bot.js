@@ -54,7 +54,7 @@ const client = new Client({
 client.once('ready', () => {
     try {
         console.log('Ready!');
-        channelId ? client.channels.cache.get(channelId).send('¡dado-bot se ha conectado!') : undefined;
+        channelId && client.channels.cache.get(channelId).send('¡dado-bot se ha conectado!');
     }
     catch (error) {
         console.warn(`Error sending readiness message to channel (${channelId})` + error);
