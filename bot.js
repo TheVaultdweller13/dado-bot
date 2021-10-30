@@ -27,7 +27,7 @@ const makeAnswer = (message) => {
     }
     catch (error) {
         console.warn(error);
-        error instanceof RangeError
+        return error instanceof RangeError
             ? getContent('Introduce un conjunto más pequeño')
             : getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
     }
