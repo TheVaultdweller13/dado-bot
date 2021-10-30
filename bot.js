@@ -27,10 +27,16 @@ const makeAnswer = (message) => {
     }
     catch (error) {
         console.warn(error);
-        return {
-            content: 'Comando no encontrado. Usa `!help` para ver los comandos disponibles',
-        };
+        error instanceof RangeError
+            ? getContent('Introduce un conjunto más pequeño')
+            : getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
     }
+};
+
+const getContent = (message) => {
+    return {
+        content: message,
+    };
 };
 
 const reply = async (message, answer) => {
