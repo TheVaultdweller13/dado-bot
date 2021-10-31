@@ -1,7 +1,8 @@
-const { Client, Intents, MessageEmbed } = require('discord.js');
+const { Client, Intents, MessageEmbed, DiscordAPIError } = require('discord.js');
 const CommandRegex = require('./commandRegex');
 const text = require('./text');
 const token = process.env.DISCORD_TOKEN;
+const channelId = process.env.CHANNEL_ID;
 
 const onRoll = (message) => {
     const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
@@ -11,34 +12,22 @@ const onRoll = (message) => {
     return { embeds: [rollEmbed(rollMsg, message.author.username)] };
 };
 
-const onHelp = () => {
-    return { content: text.HELP };
-};
-
-const onInfo = () => {
-    return { content: text.INFO };
-};
+const onHelp = () => getContent(text.HELP);
+const onInfo = () => getContent(text.INFO);
 
 const makeAnswer = (message) => {
-    try {
-        const command = commands.find((com) => com.regex.test(message.content));
-        return command.callback(message);
-    }
-    catch (error) {
-        console.warn(error);
-        return {
-            content: 'Comando no encontrado. Usa `!help` para ver los comandos disponibles',
-        };
-    }
+    const command = commands.find((com) => com.regex.test(message.content));
+    return command.callback(message);
+};
+
+const getContent = (message) => {
+    return {
+        content: message,
+    };
 };
 
 const reply = async (message, answer) => {
-    try {
-        await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
-    }
-    catch (error) {
-        console.error(error);
-    }
+    await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
 };
 
 const commands = [
@@ -55,32 +44,57 @@ const client = new Client({
     ],
 });
 
-client.once('ready', () => {
-    console.log('Ready!');
-    client.channels.cache.get('901110509758189641').send('Aquí estoy, payasos. 🤡');
+client.once('ready', async () => {
+    try {
+        console.log('Ready!');
+        channelId && await client.channels.cache.get(channelId).send('¡dado-bot se ha conectado!');
+    }
+    catch (error) {
+        console.warn(`Error sending readiness message to channel (${channelId})` + error);
+    }
 });
 
 client.on('messageCreate', async (message) => {
-    if (message.content.startsWith('!')) {
-        const answer = makeAnswer(message);
-        reply(message, answer);
+    try {
+        if (message.content.startsWith('!')) {
+            message.channel.sendTyping();
+
+            const answer = makeAnswer(message);
+            await reply(message, answer);
+        }
+    }
+    catch (error) {
+        console.warn(error);
+        switch (error.constructor) {
+        case RangeError:
+        case DiscordAPIError:
+            return getContent('¡No puedo calcular una tirada tan grande! 😳');
+        default:
+            return getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
+        }
     }
 });
 
 client.on('guildCreate', async (guild) => {
-    await guild.systemChannel.send({
-        embeds: [
-            new MessageEmbed()
-                .setTitle(text.WELCOME_TITLE)
-                .setDescription(text.WELCOME),
-        ],
-    });
+    try {
+        await guild.systemChannel.send({
+            embeds: [
+                new MessageEmbed()
+                    .setTitle(text.WELCOME_TITLE)
+                    .setDescription(text.WELCOME),
+            ],
+        });
+    }
+    catch (error) {
+        console.error('Error entering new guild: ' + error);
+    }
 });
 
 client.login(token);
 
 const roll = (dice, faces, extra) => {
-    const rolls = Array.apply(1, Array(dice))
+    const rolls = Array(dice)
+        .fill(undefined)
         .map(() => Math.floor(Math.random() * faces + 1));
 
     const rollSum = rolls.reduce((a, b) => a + b, 0);
