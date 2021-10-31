@@ -16,20 +16,8 @@ const onHelp = () => getContent(text.HELP);
 const onInfo = () => getContent(text.INFO);
 
 const makeAnswer = (message) => {
-    try {
-        const command = commands.find((com) => com.regex.test(message.content));
-        return command.callback(message);
-    }
-    catch (error) {
-        console.warn(error);
-        switch (error.constructor) {
-        case RangeError:
-        case DiscordAPIError:
-            return getContent('¡No puedo calcular una tirada tan grande! 😳');
-        default:
-            return getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
-        }
-    }
+    const command = commands.find((com) => com.regex.test(message.content));
+    return command.callback(message);
 };
 
 const getContent = (message) => {
@@ -76,7 +64,14 @@ client.on('messageCreate', async (message) => {
         }
     }
     catch (error) {
-        console.error('Error processing incoming message: ' + error);
+        console.warn(error);
+        switch (error.constructor) {
+        case RangeError:
+        case DiscordAPIError:
+            return getContent('¡No puedo calcular una tirada tan grande! 😳');
+        default:
+            return getContent('Comando no encontrado. Usa `!help` para ver los comandos disponibles');
+        }
     }
 });
 
