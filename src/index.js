@@ -3,9 +3,6 @@ import CommandRegex from "./commandRegex.js";
 import text from "./text.js";
 import config from "../config.json" assert { type: "json" };
 
-const token = config.discordToken;
-const channelId = config.channelId;
-
 const onRoll = (message) => {
   const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
   if (dice > 1000 || faces > 100000) {
@@ -48,9 +45,8 @@ const client = new Client({
 client.once("ready", async () => {
   try {
     console.log("Ready!");
-    channelId && (await client.channels.cache.get(channelId).send("¡dado-bot se ha conectado!"));
   } catch (error) {
-    console.warn(`Error sending readiness message to channel (${channelId})` + error);
+    console.warn(error);
   }
 });
 
