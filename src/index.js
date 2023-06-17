@@ -94,11 +94,13 @@ const roll = (dice, faces, extra) => {
 
   const rollSum = rolls.reduce((a, b) => a + b, 0);
 
-  return extra
-    ? dice === 1
+  if (extra) {
+    return dice === 1
       ? `Tirada: ${rollSum} + (${extra}) = ${rollSum + extra}`
       : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum} + (${extra}) = ${rollSum + extra}`
-    : dice === 1
+  }
+  
+  dice === 1
     ? `Tirada: ${rollSum}`
     : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum}`;
 };
