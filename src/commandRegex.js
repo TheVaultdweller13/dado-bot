@@ -3,7 +3,7 @@ const HELP = /!help/;
 const INFO = /!info/;
 
 module.exports = {
-    ROLL,
-    HELP,
-    INFO,
+  ROLL,
+  HELP,
+  INFO,
 };
