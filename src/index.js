@@ -62,10 +62,12 @@ client.on("messageCreate", async (message) => {
     switch (error.constructor) {
       case RangeError:
       case DiscordAPIError:
-        return await await client.channels.cache.get(channelId).send("¡No puedo calcular una tirada tan grande! 😳");
+        return await await client.channels.cache
+          .get(message.channel.id)
+          .send("¡No puedo calcular una tirada tan grande! 😳");
       default:
         return await await client.channels.cache
-          .get(channelId)
+          .get(message.channel.id)
           .send("Comando no encontrado. Usa `!help` para ver los comandos disponibles");
     }
   }
