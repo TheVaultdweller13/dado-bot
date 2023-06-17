@@ -7,6 +7,9 @@ const channelId = config.channelId;
 
 const onRoll = (message) => {
   const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
+  if (dice > 1000 || faces > 100000) {
+    throw new RangeError();
+  }
   // operator y number son el contenido adicional p.e. +30 a la tirada
   const extra = operator && number ? eval(operator + number) : null;
   const rollMsg = roll(parseInt(dice), faces, extra);
