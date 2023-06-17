@@ -89,10 +89,11 @@ const roll = (dice, faces, extra) => {
     .map(() => Math.floor(Math.random() * faces + 1));
 
   const rollSum = rolls.reduce((a, b) => a + b, 0);
+  const extraResult = extra ? ` + (${extra}) = ${rollSum + extra}` : "";
 
   return dice === 1
-    ? `Tirada: ${rollSum}${extra ? ` + (${extra})` : ""} = ${rollSum + extra}`
-    : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum}${extra ? ` + (${ extra })` : ""} = ${rollSum + extra}`;
+    ? `Tirada: ${rollSum}${extraResult}`
+    : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum}${extraResult}`;
 };
 
 const rollEmbed = (message, author) =>
