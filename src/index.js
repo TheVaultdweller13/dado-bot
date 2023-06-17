@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError } from "discord.js";
+import { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError, TextChannel } from "discord.js";
 import CommandRegex from "./commandRegex.js";
 import text from "./text.js";
 import config from "../config.json" assert { type: "json" };
@@ -7,13 +7,18 @@ const EMBED_MESSAGE_COLOR = "#A01616";
 const token = config.discordToken;
 
 const onRoll = (message) => {
-  const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
+  const match = CommandRegex.ROLL.exec(message.content);
+  if (!match) throw new Error("Regex parsing failed");
+
+  const [, diceString, facesString, , operator, number] = match;
+  const dice = parseInt(diceString);
+  const faces = parseInt(facesString);
   if (dice > 1000 || faces > 100000) {
     throw new RangeError();
   }
   // operator y number son el contenido adicional p.e. +30 a la tirada
   const extra = operator && number ? eval(operator + number) : null;
-  const rollMsg = roll(parseInt(dice), faces, extra);
+  const rollMsg = roll(dice, faces, extra);
   return { embeds: [rollEmbed(rollMsg, message.author.username)] };
 };
 
@@ -22,6 +27,9 @@ const onInfo = () => getContent(text.INFO);
 
 const makeAnswer = (message) => {
   const command = commands.find((com) => com.regex.test(message.content));
+  if (!command) {
+    throw new Error("Unrecognized command");
+  }
   return command.callback(message);
 };
 
@@ -67,19 +75,24 @@ client.on("messageCreate", async (message) => {
     }
   } catch (error) {
     console.warn(error);
+    
+    /** @type {TextChannel} */
+    // @ts-ignore this would require casting, not available in JS
+    const channel = client.channels.cache.get(message.channel.id)
+    
     switch (error.constructor) {
       case RangeError:
       case DiscordAPIError:
-        return await client.channels.cache.get(message.channel.id).send(text.MSG_SIZE_LIMIT_EXCEEDED);
+        await channel?.send(text.MSG_SIZE_LIMIT_EXCEEDED);
       default:
-        return await client.channels.cache.get(message.channel.id).send(text.UNRECOGNIZED_COMMAND);
+        await channel?.send(text.UNRECOGNIZED_COMMAND);
     }
   }
 });
 
 client.on("guildCreate", async (guild) => {
   try {
-    await guild.systemChannel.send({
+    await guild.systemChannel?.send({
       embeds: [new EmbedBuilder().setTitle(text.WELCOME_TITLE).setDescription(text.WELCOME)],
     });
   } catch (error) {
