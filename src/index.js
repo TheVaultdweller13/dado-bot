@@ -1,8 +1,9 @@
 const { Client, Intents, MessageEmbed, DiscordAPIError } = require('discord.js');
 const CommandRegex = require('./commandRegex');
 const text = require('./text');
-const token = process.env.DISCORD_TOKEN;
-const channelId = process.env.CHANNEL_ID;
+var config = require('../config.json')
+const token = config.discordToken;
+const channelId = config.channelId;
 
 const onRoll = (message) => {
     const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
