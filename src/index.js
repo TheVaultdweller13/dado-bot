@@ -3,6 +3,9 @@ import CommandRegex from "./commandRegex.js";
 import text from "./text.js";
 import config from "../config.json" assert { type: "json" };
 
+const EMBED_MESSAGE_COLOR = "#A01616";
+const token = config.discordToken;
+
 const onRoll = (message) => {
   const [, dice, faces, , operator, number] = CommandRegex.ROLL.exec(message.content);
   if (dice > 1000 || faces > 100000) {
@@ -62,11 +65,9 @@ client.on("messageCreate", async (message) => {
     switch (error.constructor) {
       case RangeError:
       case DiscordAPIError:
-        return await client.channels.cache.get(message.channel.id).send("¡No puedo calcular una tirada tan grande! 😳");
+        return await client.channels.cache.get(message.channel.id).send(text.MSG_SIZE_LIMIT_EXCEEDED);
       default:
-        return await client.channels.cache
-          .get(message.channel.id)
-          .send("Comando no encontrado. Usa `!help` para ver los comandos disponibles");
+        return await client.channels.cache.get(message.channel.id).send(text.UNRECOGNIZED_COMMAND);
     }
   }
 });
@@ -97,4 +98,4 @@ const roll = (dice, faces, extra) => {
 };
 
 const rollEmbed = (message, author) =>
-  new MessageEmbed().setColor("#A01616").setTitle(`Lanzamiento de ${author}`).setDescription(message);
+  new MessageEmbed().setColor(EMBED_MESSAGE_COLOR).setTitle(`Lanzamiento de ${author}`).setDescription(message);

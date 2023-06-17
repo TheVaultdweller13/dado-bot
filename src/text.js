@@ -33,9 +33,15 @@ Para aprender más sobre cómo utilizarlo, escribe !help.
 ¡Los que caigan al suelo **no cuentan**! 😁
 `;
 
+const UNRECOGNIZED_COMMAND = "Comando no encontrado. Usa `!help` para ver los comandos disponibles";
+
+const MSG_SIZE_LIMIT_EXCEEDED = "¡No puedo calcular una tirada tan grande! 😳";
+
 export default {
   HELP,
   INFO,
   WELCOME_TITLE,
   WELCOME,
+  UNRECOGNIZED_COMMAND,
+  MSG_SIZE_LIMIT_EXCEEDED
 };
