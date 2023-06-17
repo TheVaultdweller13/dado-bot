@@ -1,7 +1,8 @@
-const { Client, Intents, MessageEmbed, DiscordAPIError } = require("discord.js");
-const CommandRegex = require("./commandRegex");
-const text = require("./text");
-var config = require("../config.json");
+import { Client, Intents, MessageEmbed, DiscordAPIError } from "discord.js";
+import CommandRegex from "./commandRegex.js";
+import text from "./text.js";
+import config from "../config.json" assert { type: "json" };
+
 const token = config.discordToken;
 const channelId = config.channelId;
 

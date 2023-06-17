@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "Dado virtual",
   "main": "src/index.js",
+  "type": "module",
   "dependencies": {
     "discord.js": "^13.2.0"
   },

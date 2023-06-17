@@ -33,7 +33,7 @@ Para aprender más sobre cómo utilizarlo, escribe !help.
 ¡Los que caigan al suelo **no cuentan**! 😁
 `;
 
-module.exports = {
+export default {
   HELP,
   INFO,
   WELCOME_TITLE,
