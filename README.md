@@ -15,15 +15,15 @@ Virtual die for Discord
 - Export your bot's token:
   
 ```bash
-Linux & MAC
+# Linux & MAC
 > export DISCORD_TOKEN="YOUR_BOT_TOKEN_HERE"
 ```
 ```bash
-Windows (CMD)
+# Windows (CMD)
 > set DISCORD_TOKEN="YOUR_BOT_TOKEN_HERE"
 ```
 ```bash
-Windows (PowerShell)
+# Windows (PowerShell)
 > $env:DISCORD_TOKEN="YOUR_BOT_TOKEN_HERE"
 ```
 - Run the application:
