@@ -97,12 +97,10 @@ const roll = (dice, faces, extra) => {
   if (extra) {
     return dice === 1
       ? `Tirada: ${rollSum} + (${extra}) = ${rollSum + extra}`
-      : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum} + (${extra}) = ${rollSum + extra}`
+      : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum} + (${extra}) = ${rollSum + extra}`;
   }
-  
-  dice === 1
-    ? `Tirada: ${rollSum}`
-    : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum}`;
+
+  return dice === 1 ? `Tirada: ${rollSum}` : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum}`;
 };
 
 const rollEmbed = (message, author) =>
