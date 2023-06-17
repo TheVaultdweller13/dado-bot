@@ -58,9 +58,7 @@ client.once('ready', async () => {
 client.on('messageCreate', async (message) => {
     try {
         if (message.content.startsWith('!')) {
-            // TODO: For some reason, this causes problems when sending the message. Until then, it is commented
-            // message.channel.sendTyping();
-
+            await message.channel.sendTyping();
             const answer = makeAnswer(message);
             await reply(message, answer);
         }
