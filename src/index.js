@@ -90,13 +90,9 @@ const roll = (dice, faces, extra) => {
 
   const rollSum = rolls.reduce((a, b) => a + b, 0);
 
-  if (extra) {
-    return dice === 1
-      ? `Tirada: ${rollSum} + (${extra}) = ${rollSum + extra}`
-      : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum} + (${extra}) = ${rollSum + extra}`;
-  }
-
-  return dice === 1 ? `Tirada: ${rollSum}` : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum}`;
+  return dice === 1
+    ? `Tirada: ${rollSum}${extra ? ` + (${extra})` : ""} = ${rollSum + extra}`
+    : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum}${extra ? ` + (${ extra })` : ""} = ${rollSum + extra}`;
 };
 
 const rollEmbed = (message, author) =>
