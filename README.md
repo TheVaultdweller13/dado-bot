@@ -3,7 +3,7 @@
 Virtual die for Discord
 
 ### Requeriments:
-- Node (v16+)
+- Node (v20)
 - npm
 
 ## Installation
