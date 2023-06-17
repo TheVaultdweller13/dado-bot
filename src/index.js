@@ -1,4 +1,4 @@
-import { Client, Intents, MessageEmbed, DiscordAPIError } from "discord.js";
+import { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError } from "discord.js";
 import CommandRegex from "./commandRegex.js";
 import text from "./text.js";
 import config from "../config.json" assert { type: "json" };
@@ -42,7 +42,7 @@ const commands = [
 ];
 
 const client = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
 });
 
 client.once("ready", async () => {
@@ -75,7 +75,7 @@ client.on("messageCreate", async (message) => {
 client.on("guildCreate", async (guild) => {
   try {
     await guild.systemChannel.send({
-      embeds: [new MessageEmbed().setTitle(text.WELCOME_TITLE).setDescription(text.WELCOME)],
+      embeds: [new EmbedBuilder().setTitle(text.WELCOME_TITLE).setDescription(text.WELCOME)],
     });
   } catch (error) {
     console.error("Error entering new guild: " + error);
@@ -98,4 +98,4 @@ const roll = (dice, faces, extra) => {
 };
 
 const rollEmbed = (message, author) =>
-  new MessageEmbed().setColor(EMBED_MESSAGE_COLOR).setTitle(`Lanzamiento de ${author}`).setDescription(message);
+  new EmbedBuilder().setColor(EMBED_MESSAGE_COLOR).setTitle(`Lanzamiento de ${author}`).setDescription(message);
