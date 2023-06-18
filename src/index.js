@@ -125,6 +125,11 @@ const handleMessageCreateError = async (error, channelId) => {
   // @ts-ignore this would require casting, not available in JS
   const channel = client.channels.cache.get(channelId);
 
+  if (!channel) {
+    console.warn('Channel not found');
+    return;
+  }
+
   switch (error.constructor) {
     case RangeError:
       await channel?.send(text.MSG_SIZE_LIMIT_EXCEEDED);
