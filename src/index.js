@@ -104,22 +104,7 @@ client.on('messageCreate', async (message) => {
       await reply(message, answer);
     }
   } catch (error) {
-    console.warn(error);
-
-    /** @type {TextChannel} */
-    // @ts-ignore this would require casting, not available in JS
-    const channel = client.channels.cache.get(message.channel.id);
-
-    switch (error.constructor) {
-      case RangeError:
-        await channel?.send(text.MSG_SIZE_LIMIT_EXCEEDED);
-        return;
-      case DiscordAPIError:
-        await channel?.send(text.API_ERROR);
-        return;
-      default:
-        await channel?.send(text.UNRECOGNIZED_COMMAND);
-    }
+    handleMessageCreateError(error, message.channel.id);
   }
 });
 
@@ -132,5 +117,24 @@ client.on('guildCreate', async (guild) => {
     console.error('Error entering new guild: ' + error);
   }
 });
+
+const handleMessageCreateError = async (error, channelId) => {
+  console.warn(error);
+
+  /** @type {TextChannel} */
+  // @ts-ignore this would require casting, not available in JS
+  const channel = client.channels.cache.get(channelId);
+
+  switch (error.constructor) {
+    case RangeError:
+      await channel?.send(text.MSG_SIZE_LIMIT_EXCEEDED);
+      return;
+    case DiscordAPIError:
+      await channel?.send(text.API_ERROR);
+      return;
+    default:
+      await channel?.send(text.UNRECOGNIZED_COMMAND);
+  }
+};
 
 client.login(token);
