@@ -1,7 +1,7 @@
-import { Client, DiscordAPIError, EmbedBuilder, GatewayIntentBits, TextChannel } from 'discord.js';
+import { Client, EmbedBuilder, GatewayIntentBits, TextChannel } from 'discord.js';
 import config from '../config.json' assert { type: 'json' };
-import text from './text.js';
 import Bot from './bot.js';
+import text from './text.js';
 
 const token = config.token;
 const bot = new Bot();
