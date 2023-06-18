@@ -1,9 +1,9 @@
-import { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError, TextChannel } from "discord.js";
-import commandRegex from "./commandRegex.js";
-import text from "./text.js";
-import config from "../config.json" assert { type: "json" };
+import { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError, TextChannel } from 'discord.js';
+import commandRegex from './commandRegex.js';
+import text from './text.js';
+import config from '../config.json' assert { type: 'json' };
 
-const EMBED_MESSAGE_COLOR = "#A01616";
+const EMBED_MESSAGE_COLOR = '#A01616';
 const MAX_DICE = 1000;
 const MAX_FACES = 100000;
 const token = config.token;
@@ -11,7 +11,7 @@ const token = config.token;
 const parseRollCommand = (message) => {
   const match = commandRegex.ROLL.exec(message.content);
   if (!match) {
-    throw new Error("Regex parsing failed");
+    throw new Error('Regex parsing failed');
   }
 
   const [, diceString, facesString, , operator, number] = match;
@@ -26,7 +26,7 @@ const parseRollCommand = (message) => {
     throw new RangeError(`Dice faces must not exceed ${MAX_FACES}`);
   }
 
-  const sign = operator === "+" ? 1 : -1;
+  const sign = operator === '+' ? 1 : -1;
   const modifier = sign * parseInt(number);
 
   return { dice, faces, modifier };
@@ -38,9 +38,9 @@ const onRoll = (message) => {
     .fill(undefined)
     .map(() => Math.floor(Math.random() * faces + 1));
   const sum = rolls.reduce((a, b) => a + b, 0);
-  const modifierText = modifier ? ` + (${modifier}) = ${sum + modifier}` : "";
+  const modifierText = modifier ? ` + (${modifier}) = ${sum + modifier}` : '';
   const rollMsg =
-    dice === 1 ? `Tirada: ${sum}${modifierText}` : `Tiradas: ${rolls.join(", ")}\nTotal: ${sum}${modifierText}`;
+    dice === 1 ? `Tirada: ${sum}${modifierText}` : `Tiradas: ${rolls.join(', ')}\nTotal: ${sum}${modifierText}`;
 
   return {
     embeds: [
@@ -58,7 +58,7 @@ const onInfo = () => getContent(text.INFO);
 const makeAnswer = (message) => {
   const command = commands.find((com) => com.regex.test(message.content));
   if (!command) {
-    throw new Error("Unrecognized command");
+    throw new Error('Unrecognized command');
   }
   return command.callback(message);
 };
@@ -74,9 +74,9 @@ const reply = async (message, answer) => {
 };
 
 const commands = [
-  { name: "roll", regex: commandRegex.ROLL, callback: onRoll },
-  { name: "help", regex: commandRegex.HELP, callback: onHelp },
-  { name: "info", regex: commandRegex.INFO, callback: onInfo },
+  { name: 'roll', regex: commandRegex.ROLL, callback: onRoll },
+  { name: 'help', regex: commandRegex.HELP, callback: onHelp },
+  { name: 'info', regex: commandRegex.INFO, callback: onInfo },
 ];
 
 const client = new Client({
@@ -88,17 +88,17 @@ const client = new Client({
   ],
 });
 
-client.once("ready", async () => {
+client.once('ready', async () => {
   try {
-    console.log("Ready!");
+    console.log('Ready!');
   } catch (error) {
     console.warn(error);
   }
 });
 
-client.on("messageCreate", async (message) => {
+client.on('messageCreate', async (message) => {
   try {
-    if (message.content.startsWith("!")) {
+    if (!message.author.bot || message.content.startsWith('!')) {
       await message.channel.sendTyping();
       const answer = makeAnswer(message);
       await reply(message, answer);
@@ -112,21 +112,24 @@ client.on("messageCreate", async (message) => {
 
     switch (error.constructor) {
       case RangeError:
-      case DiscordAPIError:
         await channel?.send(text.MSG_SIZE_LIMIT_EXCEEDED);
+        return;
+      case DiscordAPIError:
+        await channel?.send(text.API_ERROR);
+        return;
       default:
         await channel?.send(text.UNRECOGNIZED_COMMAND);
     }
   }
 });
 
-client.on("guildCreate", async (guild) => {
+client.on('guildCreate', async (guild) => {
   try {
     await guild.systemChannel?.send({
       embeds: [new EmbedBuilder().setTitle(text.WELCOME_TITLE).setDescription(text.WELCOME)],
     });
   } catch (error) {
-    console.error("Error entering new guild: " + error);
+    console.error('Error entering new guild: ' + error);
   }
 });
 

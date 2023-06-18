@@ -21,7 +21,7 @@ Si quieres sugerir una nueva funcionalidad o encuentras un error, por favor, áb
 https://github.com/TheVaultdweller13/dado-bot/issues
 `;
 
-const WELCOME_TITLE = "¡Aquí llega dado-bot!";
+const WELCOME_TITLE = '¡Aquí llega dado-bot!';
 
 const WELCOME = `
 ¡Gracias por invitar a dado-bot a tu servidor! 💖
@@ -33,9 +33,11 @@ Para aprender más sobre cómo utilizarlo, escribe !help.
 ¡Los que caigan al suelo **no cuentan**! 😁
 `;
 
-const UNRECOGNIZED_COMMAND = "Comando no encontrado. Usa `!help` para ver los comandos disponibles";
+const UNRECOGNIZED_COMMAND = 'Comando no encontrado. Usa `!help` para ver los comandos disponibles';
 
-const MSG_SIZE_LIMIT_EXCEEDED = "¡No puedo calcular una tirada tan grande! 😳";
+const MSG_SIZE_LIMIT_EXCEEDED = '¡No puedo calcular una tirada tan grande! 😳';
+
+const API_ERROR = 'Ocurrió algún error inesperado. Intenta probar otra vez';
 
 export default {
   HELP,
@@ -43,5 +45,6 @@ export default {
   WELCOME_TITLE,
   WELCOME,
   UNRECOGNIZED_COMMAND,
-  MSG_SIZE_LIMIT_EXCEEDED
+  MSG_SIZE_LIMIT_EXCEEDED,
+  API_ERROR,
 };
