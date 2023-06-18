@@ -49,7 +49,7 @@ const onRoll = (author, command) => {
   }
 };
 
-const onHelp = () => ({ title: text.HELP_TITLE, message: text.HELP, color: colors.GOLD });
+const onHelp = () => ({ title: text.HELP_TITLE, message: text.HELP, color: colors.BLUE });
 const onInfo = () => ({ title: text.INFO_TITLE, message: text.INFO, color: colors.GREEN });
 
 const commands = [
