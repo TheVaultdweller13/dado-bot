@@ -6,11 +6,13 @@ import config from "../config.json" assert { type: "json" };
 const EMBED_MESSAGE_COLOR = "#A01616";
 const MAX_DICE = 1000;
 const MAX_FACES = 100000;
-const token = config.discordToken;
+const token = config.token;
 
 const parseRollCommand = (message) => {
   const match = commandRegex.ROLL.exec(message.content);
-  if (!match) throw new Error("Regex parsing failed");
+  if (!match) {
+    throw new Error("Regex parsing failed");
+  }
 
   const [, diceString, facesString, , operator, number] = match;
   const dice = parseInt(diceString);
