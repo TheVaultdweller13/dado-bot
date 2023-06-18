@@ -1,9 +1,9 @@
 import { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError, TextChannel } from 'discord.js';
 import commandRegex from './commandRegex.js';
 import text from './text.js';
+import colors from './colors.js';
 import config from '../config.json' assert { type: 'json' };
 
-const EMBED_MESSAGE_COLOR = '#A01616';
 const MAX_DICE = 1000;
 const MAX_FACES = 100000;
 const token = config.token;
@@ -42,18 +42,11 @@ const onRoll = (message) => {
   const rollMsg =
     dice === 1 ? `Tirada: ${sum}${modifierText}` : `Tiradas: ${rolls.join(', ')}\nTotal: ${sum}${modifierText}`;
 
-  return {
-    embeds: [
-      new EmbedBuilder()
-        .setColor(EMBED_MESSAGE_COLOR)
-        .setTitle(`Lanzamiento de ${message.author.username}`)
-        .setDescription(rollMsg),
-    ],
-  };
+  return getBasicEmbed(`Lanzamiento de ${message.author.username}`, colors.RED, rollMsg);
 };
 
 const onHelp = () => getContent(text.HELP);
-const onInfo = () => getContent(text.INFO);
+const onInfo = () => getBasicEmbed('Información', colors.GREEN, text.INFO);
 
 const makeAnswer = (message) => {
   const command = commands.find((com) => com.regex.test(message.content));
@@ -63,10 +56,14 @@ const makeAnswer = (message) => {
   return command.callback(message);
 };
 
-const getContent = (message) => {
+const getBasicEmbed = (title, color, message) => {
   return {
-    content: message,
+    embeds: [new EmbedBuilder().setTitle(title).setColor(color).setDescription(message)],
   };
+};
+
+const getContent = (message) => {
+  return { content: message };
 };
 
 const reply = async (message, answer) => {
@@ -110,9 +107,8 @@ client.on('messageCreate', async (message) => {
 
 client.on('guildCreate', async (guild) => {
   try {
-    await guild.systemChannel?.send({
-      embeds: [new EmbedBuilder().setTitle(text.WELCOME_TITLE).setDescription(text.WELCOME)],
-    });
+    const welcome = getBasicEmbed(text.WELCOME_TITLE, colors.GOLD, text.WELCOME);
+    await guild.systemChannel?.send(welcome);
   } catch (error) {
     console.error('Error entering new guild: ' + error);
   }

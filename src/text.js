@@ -17,14 +17,14 @@ Comandos:
 const INFO = `
 Este es un bot de lanzamiento de dados para Discord creado por TheVaultdweller13#6426 y Nirei#7437.
 
-Si quieres sugerir una nueva funcionalidad o encuentras un error, por favor, ábrenos un bug en GitHub o contacta con nosotros vía Discord.
-https://github.com/TheVaultdweller13/dado-bot/issues
+Si quieres sugerir una nueva funcionalidad o encuentras un error, por favor, ábrenos un [bug en GitHub](https://github.com/TheVaultdweller13/dado-bot/issues) o contacta con nosotros vía Discord.
+
 `;
 
 const WELCOME_TITLE = '¡Aquí llega dado-bot!';
 
 const WELCOME = `
-¡Gracias por invitar a dado-bot a tu servidor! 💖
+¡Gracias por invitar a [dado-bot](https://github.com/TheVaultdweller13/dado-bot) a tu servidor! 💖
 
 Su función es permitir realizar tiradas de dados 🎲, prueba por ejemplo con !3d6 para ver el resultado de lanzar 3 dados de 6 caras.
 
