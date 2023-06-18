@@ -1,80 +1,68 @@
-import { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError, TextChannel } from 'discord.js';
-import commandRegex from './commandRegex.js';
-import text from './text.js';
-import colors from './colors.js';
+import { Client, DiscordAPIError, EmbedBuilder, GatewayIntentBits, TextChannel } from 'discord.js';
 import config from '../config.json' assert { type: 'json' };
+import text from './text.js';
+import Bot from './bot.js';
 
-const MAX_DICE = 1000;
-const MAX_FACES = 100000;
 const token = config.token;
+const bot = new Bot();
 
-const parseRollCommand = (message) => {
-  const match = commandRegex.ROLL.exec(message.content);
-  if (!match) {
-    throw new Error('Regex parsing failed');
-  }
-
-  const [, diceString, facesString, , operator, number] = match;
-  const dice = parseInt(diceString);
-  const faces = parseInt(facesString);
-
-  if (dice > MAX_DICE) {
-    throw new RangeError(`Dice amount must not exceed ${MAX_DICE}`);
-  }
-
-  if (faces > MAX_FACES) {
-    throw new RangeError(`Dice faces must not exceed ${MAX_FACES}`);
-  }
-
-  const sign = operator === '+' ? 1 : -1;
-  const modifier = sign * parseInt(number);
-
-  return { dice, faces, modifier };
-};
-
-const onRoll = (message) => {
-  const { dice, faces, modifier } = parseRollCommand(message);
-  const rolls = Array(dice)
-    .fill(undefined)
-    .map(() => Math.floor(Math.random() * faces + 1));
-  const sum = rolls.reduce((a, b) => a + b, 0);
-  const modifierText = modifier ? ` + (${modifier}) = ${sum + modifier}` : '';
-  const rollMsg =
-    dice === 1 ? `Tirada: ${sum}${modifierText}` : `Tiradas: ${rolls.join(', ')}\nTotal: ${sum}${modifierText}`;
-
-  return getBasicEmbed(`Lanzamiento de ${message.author.username}`, colors.RED, rollMsg);
-};
-
-const onHelp = () => getContent(text.HELP);
-const onInfo = () => getBasicEmbed('Información', colors.GREEN, text.INFO);
-
-const makeAnswer = (message) => {
-  const command = commands.find((com) => com.regex.test(message.content));
-  if (!command) {
-    throw new Error('Unrecognized command');
-  }
-  return command.callback(message);
-};
-
-const getBasicEmbed = (title, color, message) => {
+const createEmbed = (responseParameters) => {
+  const { title = null, color, message } = responseParameters;
   return {
     embeds: [new EmbedBuilder().setTitle(title).setColor(color).setDescription(message)],
   };
-};
-
-const getContent = (message) => {
-  return { content: message };
 };
 
 const reply = async (message, answer) => {
   await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
 };
 
-const commands = [
-  { name: 'roll', regex: commandRegex.ROLL, callback: onRoll },
-  { name: 'help', regex: commandRegex.HELP, callback: onHelp },
-  { name: 'info', regex: commandRegex.INFO, callback: onInfo },
-];
+const handleMessageCreateError = async (error, channelId) => {
+  console.warn(error);
+
+  /** @type {TextChannel} */
+  // @ts-ignore this would require casting, not available in JS
+  const channel = client.channels.cache.get(channelId);
+
+  if (!channel) {
+    console.warn('Unable to send error message. Channel not found.');
+    return;
+  }
+
+  await channel?.send(text.GENERIC_ERROR);
+};
+
+const onReady = async () => {
+  try {
+    console.log('Ready!');
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+const onMessageCreate = async (message) => {
+  try {
+    if (!message.author.bot && bot.isCommandMessage(message.content)) {
+      await message.channel.sendTyping();
+      const answer = bot.executeCommand(message.author.username, message.content);
+      if (!answer) {
+        return;
+      }
+      await reply(message, createEmbed(answer));
+    }
+  } catch (error) {
+    handleMessageCreateError(error, message.channel.id);
+  }
+};
+
+const onGuildCreate = async (guild) => {
+  try {
+    const welcome = bot.welcomeMessage();
+    await guild.systemChannel?.send(createEmbed(welcome));
+  } catch (error) {
+    console.error('Error entering new guild: ' + error);
+  }
+};
 
 const client = new Client({
   intents: [
@@ -85,57 +73,7 @@ const client = new Client({
   ],
 });
 
-client.once('ready', async () => {
-  try {
-    console.log('Ready!');
-  } catch (error) {
-    console.warn(error);
-  }
-});
-
-client.on('messageCreate', async (message) => {
-  try {
-    if (!message.author.bot && message.content.startsWith('!')) {
-      await message.channel.sendTyping();
-      const answer = makeAnswer(message);
-      await reply(message, answer);
-    }
-  } catch (error) {
-    handleMessageCreateError(error, message.channel.id);
-  }
-});
-
-client.on('guildCreate', async (guild) => {
-  try {
-    const welcome = getBasicEmbed(text.WELCOME_TITLE, colors.GOLD, text.WELCOME);
-    await guild.systemChannel?.send(welcome);
-  } catch (error) {
-    console.error('Error entering new guild: ' + error);
-  }
-});
-
-const handleMessageCreateError = async (error, channelId) => {
-  console.warn(error);
-
-  /** @type {TextChannel} */
-  // @ts-ignore this would require casting, not available in JS
-  const channel = client.channels.cache.get(channelId);
-
-  if (!channel) {
-    console.warn('Channel not found');
-    return;
-  }
-
-  switch (error.constructor) {
-    case RangeError:
-      await channel?.send(text.MSG_SIZE_LIMIT_EXCEEDED);
-      return;
-    case DiscordAPIError:
-      await channel?.send(text.API_ERROR);
-      return;
-    default:
-      await channel?.send(text.UNRECOGNIZED_COMMAND);
-  }
-};
-
+client.once('ready', onReady);
+client.on('messageCreate', onMessageCreate);
+client.on('guildCreate', onGuildCreate);
 client.login(token);
