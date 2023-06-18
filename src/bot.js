@@ -2,8 +2,9 @@ import commandRegex from './commandRegex.js';
 import colors from './colors.js';
 import text from './text.js';
 
-const MAX_DICE = 1000;
+const MAX_DICE = 500;
 const MAX_FACES = 100000;
+const MAX_MODIFIER = 1000;
 
 const parseRollCommand = (message) => {
   const match = commandRegex.ROLL.exec(message);
@@ -25,6 +26,10 @@ const parseRollCommand = (message) => {
 
   const sign = operator === '+' ? 1 : -1;
   const modifier = sign * parseInt(number);
+
+  if (modifier > MAX_MODIFIER) {
+    throw new RangeError(`Modifier must not exceed ${MAX_MODIFIER}`);
+  }
 
   return { dice, faces, modifier };
 };
