@@ -95,7 +95,7 @@ client.once('ready', async () => {
 
 client.on('messageCreate', async (message) => {
   try {
-    if (!message.author.bot || message.content.startsWith('!')) {
+    if (!message.author.bot && message.content.startsWith('!')) {
       await message.channel.sendTyping();
       const answer = makeAnswer(message);
       await reply(message, answer);
