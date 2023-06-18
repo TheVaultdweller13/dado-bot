@@ -1,25 +1,53 @@
 import { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError, TextChannel } from "discord.js";
-import CommandRegex from "./commandRegex.js";
+import commandRegex from "./commandRegex.js";
 import text from "./text.js";
 import config from "../config.json" assert { type: "json" };
 
 const EMBED_MESSAGE_COLOR = "#A01616";
+const MAX_DICE = 1000;
+const MAX_FACES = 100000;
 const token = config.discordToken;
 
-const onRoll = (message) => {
-  const match = CommandRegex.ROLL.exec(message.content);
+const parseRollCommand = (message) => {
+  const match = commandRegex.ROLL.exec(message.content);
   if (!match) throw new Error("Regex parsing failed");
 
   const [, diceString, facesString, , operator, number] = match;
   const dice = parseInt(diceString);
   const faces = parseInt(facesString);
-  if (dice > 1000 || faces > 100000) {
-    throw new RangeError();
+
+  if (dice > MAX_DICE) {
+    throw new RangeError(`Dice amount must not exceed ${MAX_DICE}`);
   }
-  // operator y number son el contenido adicional p.e. +30 a la tirada
-  const extra = operator && number ? eval(operator + number) : null;
-  const rollMsg = roll(dice, faces, extra);
-  return { embeds: [rollEmbed(rollMsg, message.author.username)] };
+
+  if (faces > MAX_FACES) {
+    throw new RangeError(`Dice faces must not exceed ${MAX_FACES}`);
+  }
+
+  const sign = operator === "+" ? 1 : -1;
+  const modifier = sign * parseInt(number);
+
+  return { dice, faces, modifier };
+};
+
+const onRoll = (message) => {
+  const { dice, faces, modifier } = parseRollCommand(message);
+  const rolls = Array(dice)
+    .fill(undefined)
+    .map(() => Math.floor(Math.random() * faces + 1));
+  const sum = rolls.reduce((a, b) => a + b, 0);
+  const modifierText = modifier ? ` + (${modifier}) = ${sum + modifier}` : "";
+  const rollMsg =
+    dice === 1 ? `Tirada: ${sum}${modifierText}` : `Tiradas: ${rolls.join(", ")}\nTotal: ${sum}${modifierText}`;
+
+  return {
+    embeds: [
+      new EmbedBuilder()
+        .setColor(EMBED_MESSAGE_COLOR)
+        .setTitle(`Lanzamiento de ${message.author.username}`)
+        .setDescription(rollMsg),
+    ],
+  };
 };
 
 const onHelp = () => getContent(text.HELP);
@@ -44,9 +72,9 @@ const reply = async (message, answer) => {
 };
 
 const commands = [
-  { name: "roll", regex: CommandRegex.ROLL, callback: onRoll },
-  { name: "help", regex: CommandRegex.HELP, callback: onHelp },
-  { name: "info", regex: CommandRegex.INFO, callback: onInfo },
+  { name: "roll", regex: commandRegex.ROLL, callback: onRoll },
+  { name: "help", regex: commandRegex.HELP, callback: onHelp },
+  { name: "info", regex: commandRegex.INFO, callback: onInfo },
 ];
 
 const client = new Client({
@@ -75,11 +103,11 @@ client.on("messageCreate", async (message) => {
     }
   } catch (error) {
     console.warn(error);
-    
+
     /** @type {TextChannel} */
     // @ts-ignore this would require casting, not available in JS
-    const channel = client.channels.cache.get(message.channel.id)
-    
+    const channel = client.channels.cache.get(message.channel.id);
+
     switch (error.constructor) {
       case RangeError:
       case DiscordAPIError:
@@ -101,19 +129,3 @@ client.on("guildCreate", async (guild) => {
 });
 
 client.login(token);
-
-const roll = (dice, faces, extra) => {
-  const rolls = Array(dice)
-    .fill(undefined)
-    .map(() => Math.floor(Math.random() * faces + 1));
-
-  const rollSum = rolls.reduce((a, b) => a + b, 0);
-  const extraResult = extra ? ` + (${extra}) = ${rollSum + extra}` : "";
-
-  return dice === 1
-    ? `Tirada: ${rollSum}${extraResult}`
-    : `Tiradas: ${rolls.join(", ")}\nTotal: ${rollSum}${extraResult}`;
-};
-
-const rollEmbed = (message, author) =>
-  new EmbedBuilder().setColor(EMBED_MESSAGE_COLOR).setTitle(`Lanzamiento de ${author}`).setDescription(message);
