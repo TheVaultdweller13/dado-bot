@@ -5,6 +5,7 @@ import text from './text.js';
 const MAX_DICE = 500;
 const MAX_FACES = 100000;
 const MAX_MODIFIER = 1000;
+const MIN_MODIFIER = -MAX_MODIFIER;
 
 const parseRollCommand = (message) => {
   const match = commandRegex.ROLL.exec(message);
@@ -27,8 +28,8 @@ const parseRollCommand = (message) => {
   const sign = operator === '+' ? 1 : -1;
   const modifier = sign * parseInt(number);
 
-  if (modifier > MAX_MODIFIER) {
-    throw new RangeError(`Modifier must not exceed ${MAX_MODIFIER}`);
+  if (modifier > MAX_MODIFIER || modifier < MIN_MODIFIER) {
+    throw new RangeError(`Modifier must be between ${MAX_MODIFIER} and ${MIN_MODIFIER}`);
   }
 
   return { dice, faces, modifier };

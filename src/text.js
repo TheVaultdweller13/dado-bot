@@ -35,7 +35,7 @@ Para aprender más sobre cómo utilizarlo, escribe !help.
 ¡Los que caigan al suelo **no cuentan**! 😁
 `;
 
-const MSG_SIZE_LIMIT_EXCEEDED = '¡No puedo calcular una tirada tan grande! 😳';
+const MSG_SIZE_LIMIT_EXCEEDED = '¡No puedo calcular esa tirada! 😳';
 
 const GENERIC_ERROR = 'Ocurrió un error inesperado. Espera un poco y prueba de nuevo.';
 
