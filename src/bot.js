@@ -1,6 +1,7 @@
 import commandRegex from './commandRegex.js';
 import colors from './colors.js';
 import text from './text.js';
+import Rolls from './rolls.js';
 
 const MAX_DICE = 500;
 const MAX_FACES = 100000;
@@ -38,13 +39,18 @@ const parseRollCommand = (message) => {
 const onRoll = (author, command) => {
   try {
     const { dice, faces, modifier } = parseRollCommand(command);
-    const rolls = Array(dice)
-      .fill(undefined)
-      .map(() => Math.floor(Math.random() * faces + 1));
-    const sum = rolls.reduce((a, b) => a + b, 0);
+    const rolls = new Rolls(dice, faces);
+    const sum = rolls.getSum();
+    const critics = rolls.getCritics();
+    const botches = rolls.getBotches();
+
+    const rollsStrings = rolls.getFormatted();
+
     const modifierText = modifier ? ` + (${modifier}) = ${sum + modifier}` : '';
     const message =
-      dice === 1 ? `Tirada: ${sum}${modifierText}` : `Tiradas: ${rolls.join(', ')}\nTotal: ${sum}${modifierText}`;
+      dice === 1
+        ? `Tirada: ${sum}${modifierText}`
+        : `Tiradas: ${rollsStrings.join(', ')}\nTotal: ${sum}${modifierText}\nCríticos: ${critics}\nPifias: ${botches}`;
     const title = `Lanzamiento de ${author}`;
     const color = colors.RED;
 
@@ -67,8 +73,12 @@ const commands = [
 ];
 
 export default class Bot {
+  constructor(id) {
+    this.id = id;
+  }
   isCommandMessage(message) {
-    if (message.startsWith('!')) {
+    const isMention = message.includes(this.id);
+    if (message.startsWith('!') || isMention) {
       return commands.some((com) => com.regex.test(message));
     }
 
@@ -76,9 +86,9 @@ export default class Bot {
   }
 
   executeCommand(author, message) {
-    const command = commands.find((com) => com.regex.test(message));
+    const [command] = commands.filter(({ regex }) => regex.test(message));
     if (!command) {
-      return null;
+      throw Error(`Error to process command\nInfo: Author: ${author} | Message: ${message}`);
     }
     return command.callback(author, message);
   }

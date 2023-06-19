@@ -4,7 +4,8 @@ import Bot from './bot.js';
 import text from './text.js';
 
 const token = config.token;
-const bot = new Bot();
+const id = config.bot_id;
+const bot = new Bot(id);
 
 const createEmbed = (responseParameters) => {
   const { title = null, color, message } = responseParameters;
@@ -45,9 +46,6 @@ const onMessageCreate = async (message) => {
     if (!message.author.bot && bot.isCommandMessage(message.content)) {
       await message.channel.sendTyping();
       const answer = bot.executeCommand(message.author.username, message.content);
-      if (!answer) {
-        return;
-      }
       await reply(message, createEmbed(answer));
     }
   } catch (error) {
