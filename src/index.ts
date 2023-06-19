@@ -1,4 +1,4 @@
-import { Channel, Client, EmbedBuilder, GatewayIntentBits, Guild, Message, TextChannel } from 'discord.js';
+import { Client, EmbedBuilder, GatewayIntentBits, Guild, Message, TextChannel } from 'discord.js';
 import config from '../config.json';
 import Bot from './bot';
 import text from './text';
