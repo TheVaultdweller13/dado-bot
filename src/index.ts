@@ -7,8 +7,8 @@ const token = config.token;
 const id = config.bot_id;
 const bot = new Bot(id);
 
-const createEmbed = (responseParameters: any) => {
-  const { title = null, color, message } = responseParameters;
+const createEmbed = (params: { title: string | null; message: string; color: number }) => {
+  const { title, color, message } = params;
   return {
     embeds: [new EmbedBuilder().setTitle(title).setColor(color).setDescription(message)],
   };

@@ -57,7 +57,7 @@ const onRoll = (author: string, command: string) => {
     return { title, message, color };
   } catch (error: any) {
     if (error.constructor === RangeError) {
-      return { message: text.MSG_SIZE_LIMIT_EXCEEDED, color: colors.RED };
+      return { title: null, message: text.MSG_SIZE_LIMIT_EXCEEDED, color: colors.RED };
     }
     throw error;
   }
