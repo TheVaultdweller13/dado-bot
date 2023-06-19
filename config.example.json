@@ -1,3 +1,4 @@
 {
-  "token": "YOUR_DISCORD_API_KEY"
+  "token": "YOUR_DISCORD_API_KEY",
+  "mode": ["discord", "console"]
 }
