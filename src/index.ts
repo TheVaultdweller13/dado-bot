@@ -1,4 +1,4 @@
-import { Client, EmbedBuilder, GatewayIntentBits, TextChannel } from 'discord.js';
+import { Channel, Client, EmbedBuilder, GatewayIntentBits, Guild, Message, TextChannel } from 'discord.js';
 import config from '../config.json';
 import Bot from './bot';
 import text from './text';
@@ -14,7 +14,7 @@ const createEmbed = (params: { title: string | null; message: string; color: num
   };
 };
 
-const reply = async (message: any, answer: any) => {
+const reply = async (message: Message, answer: { embeds: EmbedBuilder[] }) => {
   await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
 };
 
@@ -38,7 +38,7 @@ const onReady = async () => {
   }
 };
 
-const onMessageCreate = async (message: any) => {
+const onMessageCreate = async (message: Message) => {
   try {
     if (!message.author.bot && bot.isCommandMessage(message.content)) {
       await message.channel.sendTyping();
@@ -50,7 +50,7 @@ const onMessageCreate = async (message: any) => {
   }
 };
 
-const onGuildCreate = async (guild: any) => {
+const onGuildCreate = async (guild: Guild) => {
   try {
     const welcome = bot.welcomeMessage();
     await guild.systemChannel?.send(createEmbed(welcome));
