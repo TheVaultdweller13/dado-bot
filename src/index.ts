@@ -1,29 +1,26 @@
 import { Client, EmbedBuilder, GatewayIntentBits, TextChannel } from 'discord.js';
-import config from '../config.json' assert { type: 'json' };
-import Bot from './bot.js';
-import text from './text.js';
+import config from '../config.json';
+import Bot from './bot';
+import text from './text';
 
 const token = config.token;
 const id = config.bot_id;
 const bot = new Bot(id);
 
-const createEmbed = (responseParameters) => {
+const createEmbed = (responseParameters: any) => {
   const { title = null, color, message } = responseParameters;
   return {
     embeds: [new EmbedBuilder().setTitle(title).setColor(color).setDescription(message)],
   };
 };
 
-const reply = async (message, answer) => {
+const reply = async (message: any, answer: any) => {
   await message.channel.send({ ...answer, reply: { messageReference: message, failIfNotExists: false } });
 };
 
-const handleMessageCreateError = async (error, channelId) => {
+const handleMessageCreateError = async (error: unknown, channelId: string) => {
   console.warn(error);
-
-  /** @type {TextChannel} */
-  // @ts-ignore this would require casting, not available in JS
-  const channel = client.channels.cache.get(channelId);
+  const channel = client.channels.cache.get(channelId) as TextChannel;
 
   if (!channel) {
     console.warn('Unable to send error message. Channel not found.');
@@ -41,7 +38,7 @@ const onReady = async () => {
   }
 };
 
-const onMessageCreate = async (message) => {
+const onMessageCreate = async (message: any) => {
   try {
     if (!message.author.bot && bot.isCommandMessage(message.content)) {
       await message.channel.sendTyping();
@@ -53,7 +50,7 @@ const onMessageCreate = async (message) => {
   }
 };
 
-const onGuildCreate = async (guild) => {
+const onGuildCreate = async (guild: any) => {
   try {
     const welcome = bot.welcomeMessage();
     await guild.systemChannel?.send(createEmbed(welcome));

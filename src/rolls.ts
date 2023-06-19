@@ -3,13 +3,16 @@
  * @class
  */
 export default class Rolls {
+  dice: number;
+  faces: number;
+  all: number[];
   /**
    * Creates a new instance of the Rolls class.
    * @constructor
    * @param {number} dice - The number of dice to roll.
    * @param {number} faces - The number of faces each die has.
    */
-  constructor(dice, faces) {
+  constructor(dice: number, faces: number) {
     this.dice = dice;
     this.faces = faces;
     this.all = toArray(dice, faces);
@@ -48,11 +51,11 @@ export default class Rolls {
   }
 }
 
-const highlight = (roll) => {
+const highlight = (roll: number) => {
   return `**__${roll}__**`;
 };
 
-const toArray = (dice, faces) => {
+const toArray = (dice: number, faces: number) => {
   return Array(dice)
     .fill(undefined)
     .map(() => Math.floor(Math.random() * faces + 1));
