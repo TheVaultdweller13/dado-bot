@@ -1,14 +1,14 @@
-import commandRegex from './commandRegex.js';
-import colors from './colors.js';
-import text from './text.js';
-import Rolls from './rolls.js';
+import commandRegex from './commandRegex';
+import colors from './colors';
+import text from './text';
+import Rolls from './rolls';
 
-const MAX_DICE = 500;
-const MAX_FACES = 100000;
-const MAX_MODIFIER = 1000;
-const MIN_MODIFIER = -MAX_MODIFIER;
+const MAX_DICE: number = 500;
+const MAX_FACES: number = 100000;
+const MAX_MODIFIER: number = 1000;
+const MIN_MODIFIER: number = -MAX_MODIFIER;
 
-const parseRollCommand = (message) => {
+const parseRollCommand = (message: string) => {
   const match = commandRegex.ROLL.exec(message);
   if (!match) {
     throw new Error('Regex parsing failed');
@@ -36,7 +36,7 @@ const parseRollCommand = (message) => {
   return { dice, faces, modifier };
 };
 
-const onRoll = (author, command) => {
+const onRoll = (author: string, command: string) => {
   try {
     const { dice, faces, modifier } = parseRollCommand(command);
     const rolls = new Rolls(dice, faces);
@@ -55,9 +55,9 @@ const onRoll = (author, command) => {
     const color = colors.RED;
 
     return { title, message, color };
-  } catch (error) {
+  } catch (error: any) {
     if (error.constructor === RangeError) {
-      return { message: text.MSG_SIZE_LIMIT_EXCEEDED, color: colors.RED };
+      return { title: null, message: text.MSG_SIZE_LIMIT_EXCEEDED, color: colors.RED };
     }
     throw error;
   }
@@ -73,10 +73,11 @@ const commands = [
 ];
 
 export default class Bot {
-  constructor(id) {
+  id: string;
+  constructor(id: string) {
     this.id = id;
   }
-  isCommandMessage(message) {
+  isCommandMessage(message: string) {
     const isMention = message.includes(this.id);
     if (message.startsWith('!') || isMention) {
       return commands.some((com) => com.regex.test(message));
@@ -85,7 +86,7 @@ export default class Bot {
     return false;
   }
 
-  executeCommand(author, message) {
+  executeCommand(author: string, message: string) {
     const [command] = commands.filter(({ regex }) => regex.test(message));
     if (!command) {
       throw Error(`Error to process command\nInfo: Author: ${author} | Message: ${message}`);
