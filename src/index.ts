@@ -20,7 +20,7 @@ const reply = async (message: Message, answer: { embeds: EmbedBuilder[] }) => {
 
 const handleMessageCreateError = async (error: unknown, channelId: string) => {
   console.warn(error);
-  const channel = client.channels.cache.get(channelId) as TextChannel;
+  const channel = client.channels.cache.get(channelId) as TextChannel | undefined;
 
   if (!channel) {
     console.warn('Unable to send error message. Channel not found.');
