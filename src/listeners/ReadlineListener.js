@@ -26,7 +26,7 @@ export default class ReadlineListener {
     this.client.prompt();
   }
 
-  login() {
+  start() {
     console.log('Console mode enabled, use Ctrl+D to finish');
     this.client.prompt();
   }

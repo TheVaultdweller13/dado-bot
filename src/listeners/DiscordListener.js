@@ -101,7 +101,7 @@ export default class DiscordListener {
     return id;
   }
 
-  login() {
+  start() {
     this.client.login(config.token);
   }
 }
