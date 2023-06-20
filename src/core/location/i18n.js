@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 
-import en from './locations/en.json' assert { type: 'json' };
-import es from './locations/es.json' assert { type: 'json' };
+import en from './locales/en.json' assert { type: 'json' };
+import es from './locales/es.json' assert { type: 'json' };
 
 i18n.init({
   lng: 'es',

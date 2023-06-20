@@ -2,7 +2,7 @@ import commandRegex from './common/commandRegex.js';
 import colors from './common/colors.js';
 import text from './common/text.js';
 import Rolls from './common/rolls.js';
-import i18n from '../../i18n.js';
+import i18n from './location/i18n.js';
 
 const MAX_DICE = 500;
 const MAX_FACES = 100000;
