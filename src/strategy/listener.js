@@ -2,7 +2,7 @@ import DiscordListener from '../listeners/DiscordListener.js';
 import ReadlineListener from '../listeners/ReadlineListener.js';
 import modes from './modes.js';
 
-export default class ListenerStrategy {
+export default class Listener {
   constructor(mode, bot) {
     switch (mode) {
       case modes.DISCORD:
