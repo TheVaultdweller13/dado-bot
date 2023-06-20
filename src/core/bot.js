@@ -2,6 +2,7 @@ import commandRegex from './common/commandRegex.js';
 import colors from './common/colors.js';
 import text from './common/text.js';
 import Rolls from './common/rolls.js';
+import i18n from '../../i18n.js';
 
 const MAX_DICE = 500;
 const MAX_FACES = 100000;
@@ -13,6 +14,7 @@ export default class Bot {
       { name: 'roll', regex: commandRegex.ROLL, callback: this.onRoll.bind(this) },
       { name: 'help', regex: commandRegex.HELP, callback: this.onHelp.bind(this) },
       { name: 'info', regex: commandRegex.INFO, callback: this.onInfo.bind(this) },
+      { name: 'language', regex: commandRegex.LANGUAGE, callback: this.onLanguage.bind(this) },
     ];
   }
 
@@ -23,6 +25,10 @@ export default class Bot {
 
     return false;
   }
+
+  handleLanguageChange = (language) => {
+    i18n.changeLanguage(language);
+  };
 
   executeCommand(author, message) {
     const [command] = this.commands.filter(({ regex }) => regex.test(message));
@@ -60,10 +66,21 @@ export default class Bot {
   };
 
   onHelp = () => {
-    return { title: text.HELP_TITLE, message: text.HELP, color: colors.BLUE };
+    return { title: text.HELP_TITLE, message: i18n.t('help'), color: colors.BLUE };
   };
+
   onInfo = () => {
     return { title: text.INFO_TITLE, message: text.INFO, color: colors.GREEN };
+  };
+
+  onLanguage = (author, message) => {
+    const language = this.parseLanguageCommand(message);
+    this.handleLanguageChange(language);
+    return {
+      title: i18n.t('change_language_title', { author }),
+      message: i18n.t('change_language_message'),
+      color: colors.RED,
+    };
   };
 
   /**
@@ -80,6 +97,17 @@ export default class Bot {
     return rolls.dice === 1
       ? `Tirada: ${sum}${modifierText}`
       : `Tiradas: ${rolls.toString()}\nTotal: ${sum}${modifierText}\nCríticos: ${critics}\nPifias: ${botches}`;
+  }
+
+  parseLanguageCommand(message) {
+    const match = commandRegex.LANGUAGE.exec(message);
+    if (!match) {
+      throw new Error('Regex parsing failed');
+    }
+
+    const [, language] = match;
+
+    return language;
   }
 
   parseRollCommand(message) {

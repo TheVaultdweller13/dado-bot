@@ -1,0 +1,5 @@
+{
+  "change_language_title": "Language changed by {{author}}",
+  "change_language_message": "Language changed to english",
+  "help": "To use the virtual dice, type the prefix `!` followed by your dice roll. You can add or subtract from the final result using the `+` and `-` operators.\n\nExamples:\n- Roll a twenty-sided die: `!1d20`\n- Roll three six-sided dice: `!3d6`\n- Roll two ten-sided dice and add five to the final result: `!2d10 + 5`\n\nCommands:\n  `!XdY`: roll X dice with Y sides\n  `!help`: show this help message\n  `!info`: display information about the bot\n  `!(en|es)`: Change the language (e.g., `!en` for English)."
+}

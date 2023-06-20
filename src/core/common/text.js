@@ -12,7 +12,8 @@ Ejemplos:
 Comandos:
   \`!XdY\`: tira X dados de Y caras
   \`!help\`: muestra este mensaje de ayuda
-  \`!info\`: muestra información sobre el bot`;
+  \`!info\`: muestra información sobre el bot
+  \`!(en|es): Cambia el lenguaje (por ejemplo \`!en\` para ponerlo en inglés)`;
 
 const INFO_TITLE = 'Información';
 

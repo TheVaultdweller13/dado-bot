@@ -1,0 +1,5 @@
+{
+  "change_language_title": "Idioma cambiado por {{author}}",
+  "change_language_message": "El idioma cambia a castellano",
+  "help": "Para usar el dado virtual escribe el prefijo `!` y a continuación tu tirada de dados. Permite sumar y restar a la tirada final con los operadores `+` y `-`\n\nEjemplos:\n- Tirar un dado de veinte: `!1d20`\n- Tirar tres dados de seis: `!3d6`\n- Tirar dos dados de diez y sumarle cinco al resultado final: `!2d10 + 5`\n\nComandos:\n  `!XdY`: tira X dados de Y caras\n  `!help`: muestra este mensaje de ayuda\n  `!info`: muestra información sobre el bot\n  `!(en|es): Cambia el lenguaje (por ejemplo `!en` para ponerlo en inglés)"
+}
