@@ -24,9 +24,6 @@ export default class ReadlineListener {
       console.log(markdownChalk(message));
     }
     this.client.prompt();
-
-    console.log('Console mode enabled, use Ctrl+D to finish');
-    this.client.prompt();
   }
 
   login() {
