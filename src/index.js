@@ -3,6 +3,6 @@ import Listener from './strategy/listener.js';
 import modes from './strategy/modes.js';
 
 const bot = new Bot();
-const listenerStrategy = new Listener(modes.DISCORD, bot);
+const listener = new Listener(modes.DISCORD, bot);
 
-listenerStrategy.login();
+listener.login();
