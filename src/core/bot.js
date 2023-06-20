@@ -43,21 +43,11 @@ export default class Bot {
   onRoll = (author, command) => {
     try {
       const { dice, faces, modifier } = this.parseRollCommand(command);
+
       const rolls = new Rolls(dice, faces);
-      const sum = rolls.getSum();
-      const critics = rolls.getCritics();
-      const botches = rolls.getBotches();
 
-      const rollsStrings = rolls.getFormatted();
-
-      const modifierText = modifier ? ` + (${modifier}) = ${sum + modifier}` : '';
-      const message =
-        dice === 1
-          ? `Tirada: ${sum}${modifierText}`
-          : `Tiradas: ${rollsStrings.join(
-              ', '
-            )}\nTotal: ${sum}${modifierText}\nCríticos: ${critics}\nPifias: ${botches}`;
       const title = `Lanzamiento de ${author}`;
+      const message = this.createRollsMessage(rolls, modifier);
       const color = colors.RED;
 
       return { title, message, color };
@@ -75,6 +65,22 @@ export default class Bot {
   onInfo = () => {
     return { title: text.INFO_TITLE, message: text.INFO, color: colors.GREEN };
   };
+
+  /**
+   * @param {Rolls} rolls
+   * @param {number} modifier
+   */
+  createRollsMessage(rolls, modifier) {
+    const sum = rolls.getSum();
+    const critics = rolls.getCritics();
+    const botches = rolls.getBotches();
+
+    const modifierText = modifier ? ` + (${modifier}) = ${sum + modifier}` : '';
+
+    return rolls.dice === 1
+      ? `Tirada: ${sum}${modifierText}`
+      : `Tiradas: ${rolls.toString()}\nTotal: ${sum}${modifierText}\nCríticos: ${critics}\nPifias: ${botches}`;
+  }
 
   parseRollCommand(message) {
     const match = commandRegex.ROLL.exec(message);

@@ -46,6 +46,10 @@ export default class Rolls {
   getFormatted() {
     return this.all.map((roll) => (roll === this.dice || roll === 1 ? highlight(roll) : roll.toString()));
   }
+
+  toString() {
+    return this.getFormatted().join(', ');
+  }
 }
 
 const highlight = (roll) => {
