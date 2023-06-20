@@ -1,7 +1,7 @@
-import commandRegex from './commandRegex.js';
-import colors from './colors.js';
-import text from './text.js';
-import Rolls from './rolls.js';
+import commandRegex from './common/commandRegex.js';
+import colors from './common/colors.js';
+import text from './common/text.js';
+import Rolls from './common/rolls.js';
 
 const MAX_DICE = 500;
 const MAX_FACES = 100000;
@@ -40,7 +40,7 @@ export default class Bot {
     };
   }
 
-  onRoll(author, command) {
+  onRoll = (author, command) => {
     try {
       const { dice, faces, modifier } = this.parseRollCommand(command);
       const rolls = new Rolls(dice, faces);
@@ -67,14 +67,14 @@ export default class Bot {
       }
       throw error;
     }
-  }
+  };
 
-  onHelp() {
+  onHelp = () => {
     return { title: text.HELP_TITLE, message: text.HELP, color: colors.BLUE };
-  }
-  onInfo() {
+  };
+  onInfo = () => {
     return { title: text.INFO_TITLE, message: text.INFO, color: colors.GREEN };
-  }
+  };
 
   parseRollCommand(message) {
     const match = commandRegex.ROLL.exec(message);

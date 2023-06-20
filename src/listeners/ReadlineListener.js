@@ -1,14 +1,19 @@
+import readline from 'readline';
 import chalk from 'chalk';
 import os from 'os';
-import markdownChalk from 'markdown-chalk'
+import markdownChalk from 'markdown-chalk';
 
 export default class ReadlineListener {
-  constructor(bot, client) {
+  constructor(bot) {
     this.bot = bot;
-    this.client = client;
+    this.client = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+      prompt: '> ',
+    });
     this.username = os.userInfo().username;
 
-    client.on('line', this.onCommand.bind(this));
+    this.client.on('line', this.onCommand.bind(this));
   }
 
   onCommand(command) {
@@ -18,6 +23,14 @@ export default class ReadlineListener {
       console.log(chalk.hex(hexColor).bold(title));
       console.log(markdownChalk(message));
     }
+    this.client.prompt();
+
+    console.log('Console mode enabled, use Ctrl+D to finish');
+    this.client.prompt();
+  }
+
+  login() {
+    console.log('Console mode enabled, use Ctrl+D to finish');
     this.client.prompt();
   }
 }

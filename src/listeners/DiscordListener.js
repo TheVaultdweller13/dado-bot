@@ -1,12 +1,19 @@
-import { EmbedBuilder, TextChannel } from 'discord.js';
-import text from './text.js';
-
-const MENTION_REGEX = /<@(\d+)>/;
+import { Client, EmbedBuilder, GatewayIntentBits, TextChannel } from 'discord.js';
+import text from '../core/common/text.js';
+import config from '../../config.json' assert { type: 'json' };
+import regex from './discord/regex.js';
 
 export default class DiscordListener {
-  constructor(bot, client) {
+  constructor(bot) {
     this.bot = bot;
-    this.client = client;
+    this.client = new Client({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.MessageContent,
+      ],
+    });
     this.client.once('ready', this.onReady.bind(this));
     this.client.on('messageCreate', this.onMessageCreate.bind(this));
     this.client.on('guildCreate', this.onGuildCreate.bind(this));
@@ -24,7 +31,7 @@ export default class DiscordListener {
   }
 
   async handleMention(message) {
-    const match = MENTION_REGEX.exec(message.content);
+    const match = regex.MENTION.exec(message.content);
     if (!match) {
       throw new Error('Unable to match mention');
     }
@@ -62,11 +69,14 @@ export default class DiscordListener {
 
   async onMessageCreate(message) {
     try {
-      if (!message.author.bot && this.bot.isCommandMessage(message.content)) {
+      if (message.author.bot) {
+        return;
+      }
+      if (this.bot.isCommandMessage(message.content)) {
         await message.channel.sendTyping();
         const answer = this.bot.executeCommand(message.author.username, message.content);
         await this.reply(message, this.createEmbed(answer));
-      } else if (!message.author.bot && MENTION_REGEX.test(message.content)) {
+      } else if (regex.MENTION.test(message.content)) {
         this.handleMention(message);
       }
     } catch (error) {
@@ -89,5 +99,9 @@ export default class DiscordListener {
       throw Error('Unable to find self user ID');
     }
     return id;
+  }
+
+  login() {
+    this.client.login(config.token);
   }
 }
